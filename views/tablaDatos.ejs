@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos Registrados</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Enlace al CSS de Bootstrap -->
+    <style>
+        /* Estilo personalizado para filas impares */
+        tbody tr:nth-of-type(odd) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Datos Registrados</h1>
+        <a href="/" class="btn btn-primary mb-3">Ir a Registro</a> <!-- Botón para redireccionar a registro.ejs -->
+
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nombre Medicamento</th>
+                    <th>Dosis</th>
+                    <th>Toma</th>
+                    <th>Fecha Registrado</th>
+                    <th>Hora Registrado</th>
+                    <th>Comentarios</th>
+                    <th>Acciones</th> <!-- Nueva columna para el botón -->
+                </tr>
+            </thead>
+            <tbody>
+                <% datos.listamedicina.forEach(function(dato, index) { %>
+                    <tr class="<%= index % 2 === 0 ? 'table-primary' : '' %>">
+                        <td><%= dato.nombreMedicina %></td>
+                        <td><%= dato.dosis %></td>
+                        <td><%= dato.toma %></td>
+                        <td><%= dato.fecha %></td>
+                        <td><%= dato.hora %></td>
+                        <td><%= dato.comentarios %></td>
+                        <!-- Formulario para enviar datos al hacer clic en "Administrar" -->
+                <td>
+                    <form action="/administrar" method="POST">
+                        <!-- Campos ocultos para enviar datos correspondientes -->
+                        <input type="hidden" name="nombre" value="<%= dato.nombreMedicina %>">
+                        <input type="hidden" name="dosis" value="<%= dato.dosis %>">
+                        <input type="hidden" name="toma" value="<%= dato.toma %>">
+                        <input type="hidden" name="fecha" value="<%= dato.fecha %>">
+                        <input type="hidden" name="hora" value="<%= dato.hora %>">
+                        <input type="hidden" name="comentarios" value="<%= dato.comentarios %>">
+                        <!-- Botón "Administrar" que enviará los datos del formulario -->
+                        <button type="submit" class="btn btn-primary">Administrar</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+    
+<!-- Tabla para la mañana -->
+
+<table class="table table-bordered custom-tableTemprano">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nombre Medicamento</th>
+            <th>Dosis</th>
+            <th>Toma</th>
+            <th>Fecha Registrado</th>
+            <th>Hora Registrado</th>
+            <th>Comentarios</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (datos.temprano && datos.temprano.length > 0) { %>
+            <% let index = 0; %>
+            <% datos.temprano.forEach(function(dato) { %>
+                <tr class= "table-warning <%= index % 2 === 0 ? 'table-primary' : '' %>">
+                    <td><%= dato.nombreMedicina %></td>
+                    <td><%= dato.dosis %></td>
+                    <td><%= dato.toma %></td>
+                    <td><%= dato.fecha %></td>
+                    <td><%= dato.hora %></td>
+                    <td><%= dato.comentarios %></td>
+                    <td class="highlight-yellow">
+                        <form action="/tomarTemprano" method="POST">
+                            <input type="hidden" name="nombre" value="<%= dato.nombreMedicina %>">
+                            <input type="hidden" name="dosis" value="<%= dato.dosis %>">
+                            <input type="hidden" name="toma" value="<%= dato.toma %>">
+                            <input type="hidden" name="fecha" value="<%= dato.fecha %>">
+                            <input type="hidden" name="hora" value="<%= dato.hora %>">
+                            <input type="hidden" name="comentarios" value="<%= dato.comentarios %>">
+                            <button type="submit" class="btn btn-warning">Tomar</button>
+                        </form>
+                    </td>
+                </tr>
+                <% index++; %>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="N">No hay datos disponibles</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+
+
+
+<!-- Tabla para la tarde -->
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nombre Medicamento</th>
+            <th>Dosis</th>
+            <th>Toma</th>
+            <th>Fecha Registrado</th>
+            <th>Hora Registrado</th>
+            <th>Comentarios</th>
+            <th>Acciones</th> <!-- Nueva columna para el botón -->
+        </tr>
+    </thead>
+    <tbody>
+        <% if (datos.tarde && datos.tarde.length > 0) { %>
+            <% let index = 0; %>
+        <% datos.tarde.forEach(function(dato) { %>
+            <tr class="table-danger <%= index % 2 === 0 ? 'table-primary' : '' %>">
+                <td><%= dato.nombreMedicina %></td>
+                <td><%= dato.dosis %></td>
+                <td><%= dato.toma %></td>
+                <td><%= dato.fecha %></td>
+                <td><%= dato.hora %></td>
+                <td><%= dato.comentarios %></td>
+                <!-- Formulario para enviar datos al hacer clic en "Tomar" -->
+        <td>
+            <form action="/tomarTarde" method="POST">
+                <!-- Campos ocultos para enviar datos correspondientes -->
+                <input type="hidden" name="nombre" value="<%= dato.nombreMedicina %>">
+                <input type="hidden" name="dosis" value="<%= dato.dosis %>">
+                <input type="hidden" name="toma" value="<%= dato.toma %>">
+                <input type="hidden" name="fecha" value="<%= dato.fecha %>">
+                <input type="hidden" name="hora" value="<%= dato.hora %>">
+                <input type="hidden" name="comentarios" value="<%= dato.comentarios %>">
+                <!-- Botón "Tomar" que enviará los datos del formulario -->
+                <button type="submit" class="btn btn-danger">Tomar</button>
+            </form>
+        </td>
+    </tr>
+    <% index++; %>
+    <% }); %>
+<% } else { %>
+    <tr>
+        <td colspan="N">No hay datos disponibles</td> <!-- Reemplaza 'N' por el número de columnas -->
+    </tr>
+<% } %>
+</tbody>
+</table>
+
+
+<!-- Tabla para la noche -->
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nombre Medicamento</th>
+            <th>Dosis</th>
+            <th>Toma</th>
+            <th>Fecha Registrado</th>
+            <th>Hora Registrado</th>
+            <th>Comentarios</th>
+            <th>Acciones</th> <!-- Nueva columna para el botón -->
+        </tr>
+    </thead>
+    <tbody>
+        <% if (datos.noche && datos.noche.length > 0) { %>
+            <% let index = 0; %>
+        <% datos.noche.forEach(function(dato) { %>
+            <tr class="<%= index % 2 === 0 ? 'table-primary' : '' %>">
+                <td><%= dato.nombreMedicina %></td>
+                <td><%= dato.dosis %></td>
+                <td><%= dato.toma %></td>
+                <td><%= dato.fecha %></td>
+                <td><%= dato.hora %></td>
+                <td><%= dato.comentarios %></td>
+                <!-- Formulario para enviar datos al hacer clic en "Tomar" -->
+        <td>
+            <form action="/tomarNoche" method="POST">
+                <!-- Campos ocultos para enviar datos correspondientes -->
+                <input type="hidden" name="nombre" value="<%= dato.nombreMedicina %>">
+                <input type="hidden" name="dosis" value="<%= dato.dosis %>">
+                <input type="hidden" name="toma" value="<%= dato.toma %>">
+                <input type="hidden" name="fecha" value="<%= dato.fecha %>">
+                <input type="hidden" name="hora" value="<%= dato.hora %>">
+                <input type="hidden" name="comentarios" value="<%= dato.comentarios %>">
+                <!-- Botón "Tomar" que enviará los datos del formulario -->
+                <button type="submit" class="btn btn-primary">Tomar</button>
+            </form>
+        </td>
+    </tr>
+    <% index++; %>
+    <% }); %>
+<% } else { %>
+    <tr>
+        <td colspan="N">No hay datos disponibles</td> <!-- Reemplaza 'N' por el número de columnas -->
+    </tr>
+<% } %>
+</tbody>
+</table>
+
+<!-- Tabla para la madrugada -->
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nombre Medicamento</th>
+            <th>Dosis</th>
+            <th>Toma</th>
+            <th>Fecha Registrado</th>
+            <th>Hora Registrado</th>
+            <th>Comentarios</th>
+            <th>Acciones</th> <!-- Nueva columna para el botón -->
+        </tr>
+    </thead>
+    <tbody>
+        <% if (datos.madrugada && datos.madrugada.length > 0) { %>
+            <% let index = 0; %>
+        <% datos.madrugada.forEach(function(dato) { %>
+            <tr class="table-info <%= index % 2 === 0 ? 'table-primary' : '' %>">
+                <td><%= dato.nombreMedicina %></td>
+                <td><%= dato.dosis %></td>
+                <td><%= dato.toma %></td>
+                <td><%= dato.fecha %></td>
+                <td><%= dato.hora %></td>
+                <td><%= dato.comentarios %></td>
+                <!-- Formulario para enviar datos al hacer clic en "Tomar" -->
+        <td>
+            <form action="/tomarMadrugada" method="POST">
+                <!-- Campos ocultos para enviar datos correspondientes -->
+                <input type="hidden" name="nombre" value="<%= dato.nombreMedicina %>">
+                <input type="hidden" name="dosis" value="<%= dato.dosis %>">
+                <input type="hidden" name="toma" value="<%= dato.toma %>">
+                <input type="hidden" name="fecha" value="<%= dato.fecha %>">
+                <input type="hidden" name="hora" value="<%= dato.hora %>">
+                <input type="hidden" name="comentarios" value="<%= dato.comentarios %>">
+                <!-- Botón "Tomar" que enviará los datos del formulario -->
+                <button type="submit" class="btn btn-info">Tomar</button>
+            </form>
+        </td>
+    </tr>
+    <% index++; %>
+    <% }); %>
+<% } else { %>
+    <tr>
+        <td colspan="N">No hay datos disponibles</td> <!-- Reemplaza 'N' por el número de columnas -->
+    </tr>
+<% } %>
+</tbody>
+</table>
+    
+
+
+<!-- Tabla para todas horas -->
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nombre Medicamento</th>
+            <th>Dosis</th>
+            <th>Toma</th>
+            <th>Fecha Registrado</th>
+            <th>Hora Registrado</th>
+            <th>Comentarios</th>
+            <th>Acciones</th> <!-- Nueva columna para el botón -->
+        </tr>
+    </thead>
+    <tbody>
+        <% if (datos.cualquier && datos.cualquier.length > 0) { %>
+            <% let index = 0; %>
+        <% datos.cualquier.forEach(function(dato) { %>
+            <tr class="table-info <%= index % 2 === 0 ? 'table-primary' : '' %>">
+                <td><%= dato.nombreMedicina %></td>
+                <td><%= dato.dosis %></td>
+                <td><%= dato.toma %></td>
+                <td><%= dato.fecha %></td>
+                <td><%= dato.hora %></td>
+                <td><%= dato.comentarios %></td>
+                <!-- Formulario para enviar datos al hacer clic en "Tomar" -->
+        <td>
+            <form action="/tomarCulaquier" method="POST">
+                <!-- Campos ocultos para enviar datos correspondientes -->
+                <input type="hidden" name="nombre" value="<%= dato.nombreMedicina %>">
+                <input type="hidden" name="dosis" value="<%= dato.dosis %>">
+                <input type="hidden" name="toma" value="<%= dato.toma %>">
+                <input type="hidden" name="fecha" value="<%= dato.fecha %>">
+                <input type="hidden" name="hora" value="<%= dato.hora %>">
+                <input type="hidden" name="comentarios" value="<%= dato.comentarios %>">
+                <!-- Botón "Tomar" que enviará los datos del formulario -->
+                <button type="submit" class="btn btn-info">Tomar</button>
+            </form>
+        </td>
+    </tr>
+    <% index++; %>
+    <% }); %>
+<% } else { %>
+    <tr>
+        <td colspan="N">No hay datos disponibles</td> <!-- Reemplaza 'N' por el número de columnas -->
+    </tr>
+<% } %>
+</tbody>
+</table>
+
+    <!-- Primero carga jQuery y luego Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="module" src="archivo-no-js.js"></script>
+
+
+    <!-- Scripts de Bootstrap -->
+</body>
+</html>
+
